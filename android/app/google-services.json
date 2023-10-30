@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "339399210213",
+    "project_id": "gasto-certo-app",
+    "storage_bucket": "gasto-certo-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339399210213:android:eccdd84058a90261f6900c",
+        "android_client_info": {
+          "package_name": "br.com.gasto_certo.gasto_certo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_YiOUKmbegSood3jJfhSKAMUQz4AjtPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

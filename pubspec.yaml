@@ -1,0 +1,69 @@
+name: gasto_certo
+description: A new Flutter project.
+
+publish_to: 'none' 
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  shared_preferences: ^2.2.2
+  flutter_pluggy_connect: ^1.3.0
+  syncfusion_flutter_charts: ^23.1.41
+  http: ^1.1.0
+  flutter_dotenv: ^5.1.0  
+  get_it: ^7.6.4
+  # flutter_secure_storage: 
+  firebase_core: ^2.20.0
+  cloud_firestore: ^4.12.1
+  firebase_remote_config: ^4.3.2
+  firebase_auth: ^4.12.0
+  intl: ^0.18.1
+
+
+  
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+      - assets/images/
+      - assets/icons/
+      - .env
+
+  # - assets/images/
+  #   - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
