@@ -7,7 +7,8 @@ class ExpenseModel {
   String? description;
   String? date;
   int? iconColor; // Change the type to Color
-  String? amount;
+  double? amount;
+  int? transactions;
 
   ExpenseModel({
     this.id,
@@ -15,6 +16,7 @@ class ExpenseModel {
     required this.date,
     this.iconColor,
     required this.amount,
+    required this.transactions,
   });
 
   ExpenseModel.fromJson(Map<String, dynamic> json, String id) {
@@ -23,6 +25,7 @@ class ExpenseModel {
     amount = json['amount'] ?? "";
     date = json['date'] ?? "";
     iconColor = json['iconColor'] ?? 4282536512;
+    transactions = json['transactions'] ?? 0;
     log(json['iconColor']);
   }
 

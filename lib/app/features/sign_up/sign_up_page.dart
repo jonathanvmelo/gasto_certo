@@ -130,7 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         controller: _passwordController,
                         labelText: 'crie sua senha',
                         hintText: '********',
-                        helperText: "A senha deve ter entre 6 e 12 caractéries",
+                        helperText: "A senha deve ter entre 6 e 12 caracteres",
                         validator: Validator.validatePassword,
                       ),
                       PasswordTextForm(
@@ -149,7 +149,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     textButton: 'Cadastrar',
                     onTap: () {
                       if (_formkey.currentState!.validate()) {
-                        _controller.signUp(
+                        _controller.doSignUp(
                           name: _nameController.text,
                           email: _emailController.text,
                           password: _passwordController.text,

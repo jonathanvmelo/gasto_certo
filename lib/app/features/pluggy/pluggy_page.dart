@@ -1,61 +1,81 @@
-import 'dart:convert';
-import 'dart:developer';
+import "dart:developer";
 
-import 'package:flutter/material.dart';
-import 'package:flutter_pluggy_connect/flutter_pluggy_connect.dart';
+import "package:flutter/material.dart";
 
-class PluggyPage extends StatefulWidget {
-  const PluggyPage({super.key});
+import "package:flutter_pluggy_connect/flutter_pluggy_connect.dart";
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import "package:gasto_certo/app/data/DTO/conection_key_response.dart";
+import 'package:gasto_certo/app/repositories/pluggy_repository.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({
+    super.key,
+  });
 
   @override
-  State<PluggyPage> createState() => _PluggyPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _PluggyPageState extends State<PluggyPage> {
-  bool _showPluggy = false;
-  void _togglePluggyConnect() {
-    setState(() {
-      _showPluggy = !_showPluggy;
-    });
-  }
+class _HomePageState extends State<HomePage> {
+  // final HomeController controller = HomeController(PluggyRepository());
+
+  bool enterSucess = false;
+
+  // ignore: unused_field
+  // late Future<String> _futurePluggyConnectToken;
 
   @override
   Widget build(BuildContext context) {
-    if (!_showPluggy) {
-      return Scaffold(
-        body: Center(
-            child: ElevatedButton(
-          onPressed: () {
-            _togglePluggyConnect();
-          },
-          child: const Text("Iniciar"),
-        )),
-      );
-    }
+    return Scaffold(
+      body: FutureBuilder(
+        future: PluggyRepository.getConnectionToken(
+            dotenv.env['CLIENT_ID'] ?? "", dotenv.env['CLIENT_SECRET'] ?? ""),
+        builder: (BuildContext context,
+            AsyncSnapshot<ConnectionKeyResponse?> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            if (snapshot.hasError) {
+              return Center(child: Text('Erro: ${snapshot.error}'));
+            } else {
+              return PluggyConnect(
+                  includeSandbox: true,
+                  onSuccess: (data) {
+                    log('onSuccess: ');
 
-    return PluggyConnect(
-        includeSandbox: true,
-        onSuccess: (data) {
-          log(jsonEncode(data));
+                    enterSucess = true;
+                  },
+                  onClose: () {
+                    log('onClose: ');
 
-          Navigator.of(context).pushNamed("/bottomBar");
+                    if (enterSucess) {
+                      Navigator.of(context).pushNamed("/homeBottomBar");
+                    } else {
+                      //Navigator.of(context).pop();
+                      Navigator.of(context).popAndPushNamed('signIn');
+                    }
+                  },
+                  onError: (error) {
+                    log('onError: ');
+                  },
+                  onOpen: () {
+                    log('onOpen: ');
+
+                    enterSucess = false;
+                  },
+                  onEvent: (payload) {
+                    log('onEvent: ');
+                  },
+                  connectToken: snapshot.data!.connectionToken);
+            }
+          }
         },
-        onClose: () {
-          log('Closed');
-          _togglePluggyConnect();
-        },
-        onError: (error) {
-          log('Error');
-          log(jsonEncode(error));
-        },
-        onOpen: () {
-          log('Opened');
-        },
-        onEvent: (payload) {
-          log('Event');
-          log(jsonEncode(payload));
-        },
-        connectToken:
-            'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6ImU4ODk1MzgzLWM4ZTAtNDU0Ny1hNWE3LTQ2YjYzNjA5MWE5ZSIsImRhdGEiOiJlZTlkZWQwYmJjY2Y2NWQxMzg3ODUzZDJjZjY4MDYzMjo4NWY1MjNiZTMyNjBmZmE5Nzg0ODQ3ZDBlMGQyZmNlOWIwMmMxMmMzZGFhYTc2YWJmYjE1NzNmZjU0MWMzZDk3MjA2NjgwZmQxZmZjYmQ1YjFmMTc1OTBhY2I5ZGY0MjM1MzQyYzllODhjOTg0MzA2MDg1YTNlNGJlZjZjYTY2ZjZmYjU4MzRkNzY1YzdmZjdmMGNiZWI0ZmVmNDU3MGRiNGE3MDkxNThiMDMwYWJiOTMxMmNiYWRkODYyMGQyMzA5NTRmZDY2MzExMDkwODYzMGFiOTg4YzEyMmRiNTQ4YjQ0ZWZhYmE1NGYzODNmOWVmMmEyMTk5OTFmMzM1ODIwIiwiaWF0IjoxNjk4MTg4NzU2LCJleHAiOjE2OTgxOTA1NTZ9.akLJeGKPkc1-3j_fZZw0BZMhaCUV1HJMS1tdvIDxq1J54b6EjU-FskSrzdbpzrZRk3XNFTncco-OyzVp6pua3EB-uA-WBagz_CMYAOxSnQpa5SFHPWJPrWCz5lvO7QWjzsG-o3UybteQaYVGVMwVHKLgd85c91GO860BoIRS2v6hmqhUejGlIaN3kJ7j-kETn4piTY0E5d0f8fWT5WD1ZRBGDFjJZ4pwNhZBfIksDcx1J_xALQrEyiu6ahYfgF6LBzJiprTdSylNxGCVJeliA5LxacfQ5hCrJMHbEGvPSo7NuO1rKya8I4Pvh3G8IubSdbURAsOM_76AnIb-b3M1Lg');
+      ),
+    );
   }
 }
+
+
+//  connectToken:
+//             'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjI1YzEwY2E5LTdjNWMtNGVhOC04OTcwLTk1ZmI4OWZlOWFkOCIsImRhdGEiOiI5OGI4OTY0YTExOTk2M2UzMDQ3NDc3MWM5MjlmZDBmZDplNzQ0MGQ4NTFjNDgwZWIyYzZhNWFjZDliZWY1M2VmZjQ5YjRmYzc4NjM2YzFiZGQzY2FlYjRmODZjZmRlMzE5OWI4MTEwYWY2OTk1MDNhNTMzNDg0OGFjN2QwNzFlNGUzZGU2MGYxOWQ4YjUyYTgxYjJjYzU5NjgyZjQ3MDEzOGY1ZWVjODM2OTJiODM4YWNhZTI2MDIzYjJmZjkzMTNjODk4YTZhZTI4MDZlZTYxNjllZWY4Njc0YTgxYjg1ZDY1NThhYmZiMmJmZTExNzhhZjk0YWY2MmI1YWY1ZGUxZmI5NzA5MTgyOTk1NTJhZDIxODFmNDE4MzU4NDc1YjlhIiwiaWF0IjoxNjk4MTA5OTA4LCJleHAiOjE2OTgxMTE3MDh9.jLGiWWVGq2KY42ayaswgJda8LQx8DL4hIonlmRWWfq0F_92YFGu_XMz06Mq79dIolylzkHjcNbvfLSe-vGHy5qAKZrPAfi8i9wk-RIt6alGCH5m-MFp1a3zlapwUve1s7GzGne89aVwl6Ajnh1zfIhm8Zr8kbakFZLhQh_Y0U3pJkkuGOJJYGPUSQsi4CJ3ZNIRl6H3H4JTgfGH9mhEb6oAjFZr59m1a73qnKBT11gXYzlsrCzVztD1QjIB8wKHaxAQMSOMkNCWxrX3GAuh5sWpwmDgyS-vTIdW8Ld7eDkxAQIJHpR6VVSbQjJFrnvhdrqH_KKPFHNGZTMLv9brSEQ',
+//       )

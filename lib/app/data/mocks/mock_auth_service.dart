@@ -38,4 +38,7 @@ class MockAuthService implements IAuthService {
       throw 'Não foi possível criar sua senha. Tente novamente';
     }
   }
+
+  @override
+  Future<void> signOut() async {}
 }

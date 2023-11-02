@@ -10,7 +10,6 @@ import 'package:gasto_certo/app/common/widgets/password_text_form.dart';
 import 'package:gasto_certo/app/common/widgets/primary_button.dart';
 import 'package:gasto_certo/app/features/sign_in/sign_in_controller.dart';
 import 'package:gasto_certo/app/features/sign_in/sign_in_state.dart';
-import 'package:gasto_certo/app/features/sign_up/sign_up_page.dart';
 import 'package:gasto_certo/app/locator.dart';
 
 class SignInPage extends StatefulWidget {
@@ -24,42 +23,62 @@ class _SignInPageState extends State<SignInPage> {
   final _formkey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
-  final _controller = getIt.get<SignInController>();
+  final _signInController = getIt.get<SignInController>();
   bool showError = false;
   String errorText = '';
 
   @override
   void initState() {
     super.initState();
+    stateManager();
+  }
+
+  login() {
+    final valid =
+        _formkey.currentState != null && _formkey.currentState!.validate();
+    if (valid) {
+      _signInController.signIn(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } else {
+      log('Erro de validação');
+    }
   }
 
   stateManager() async {
-    _controller.addListener(() async {
-      if (_controller.state is SignInStateLoading) {
+    _signInController.addListener(() {
+      if (_signInController.state is SignInStateLoading) {
         showDialog(
           context: context,
           builder: (context) => const Center(
-            child: Center(child: CircularProgressIndicator()),
+            child: CircularProgressIndicator(),
           ),
         );
       }
-      if (_controller.state is SignInStateSuccess) {
-        // await  Navigator.of(context).popAndPushNamed('/selectProfile');
+      if (_signInController is SignInStateProfile) {
+        Navigator.of(context).pushReplacementNamed('/selectProfile');
       }
-      if (_controller.state is SignInStateError) {
-        final error = _controller.state as SignInStateError;
+      if (_signInController.state is SignInStateSuccess) {
+        Navigator.of(context).pushReplacementNamed('/homeBottomBar');
+      }
+      if (_signInController.state is SignInStateError) {
+        Navigator.of(context).pop();
+        final error = _signInController.state as SignInStateError;
+        // ignore: use_build_context_synchronously
         customModalBottomSheet(
           context,
           message: error.message,
-          buttonText: 'Algo deu errado.Tente novamente',
+          buttonText: 'Tente novamente',
         );
+        // setState(() {});
       }
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _signInController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -115,12 +134,16 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         ),
                         PasswordTextForm(
-                            controller: _passwordController,
-                            labelText: 'senha',
-                            hintText: '********',
-                            helperText:
-                                "A senha deve ter entre 6 e 12 caractéries",
-                            validator: Validator.validatePassword),
+                          controller: _passwordController,
+                          labelText: 'senha',
+                          hintText: '********',
+                          helperText:
+                              "A senha deve ter entre 6 e 12 caracteres",
+                          validator: Validator.validatePassword,
+                          onEditingComplete: () {
+                            login();
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -132,51 +155,21 @@ class _SignInPageState extends State<SignInPage> {
                           height: 80,
                         ),
                         PrimaryButton(
-                          color: AppColors.darkBlue,
-                          textButton: 'Entrar',
-                          onTap: () {
-                            // Se o usuário já tem cadastro e não for o primeiro acesso enviar para Home caso contrário para SelectPerfil
-
-                            if (_formkey.currentState!.validate()) {
-                              _controller
-                                  .signIn(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                  )
-                                  .then((value) => Navigator.of(context)
-                                      .pushNamed('/selectProfile'));
-                              _emailController.text = '';
-                              _passwordController.text = '';
-                            } else {
-                              customModalBottomSheet(context,
-                                  message: 'Erro ao logar');
-                              Navigator.of(context).pop();
-                              log('Usuário ou senha inválidos');
-                            }
-                          },
-                        ),
+                            color: AppColors.darkBlue,
+                            textButton: 'Entrar',
+                            onTap: () {
+                              login();
+                            }),
                         const SizedBox(
                           height: 20,
                         ),
                         PrimaryButton(
-                          color: AppColors.ligthBlue,
-                          textColor: AppColors.darkBlue,
-                          textButton: 'Cadastre-se',
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const SignUpPage(),
-                            ));
-                            if (_formkey.currentState!.validate()) {
-                              // _controller.login(
-                              //   name: _nameController.text,
-                              //   email: _emailController.text,
-                              //   password: _passwordController.text,
-                              // );
-                            } else {
-                              log('Erro ao logar');
-                            }
-                          },
-                        ),
+                            color: AppColors.ligthBlue,
+                            textColor: AppColors.darkBlue,
+                            textButton: 'Cadastre-se',
+                            onTap: () {
+                              Navigator.of(context).popAndPushNamed('/signUp');
+                            }),
                         const SizedBox(
                           height: 20,
                         ),
@@ -187,7 +180,7 @@ class _SignInPageState extends State<SignInPage> {
                                 .copyWith(color: AppColors.darkBlue),
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushNamed('/forgot');
+                            Navigator.of(context).popAndPushNamed('/forgot');
                           },
                         ),
                       ],

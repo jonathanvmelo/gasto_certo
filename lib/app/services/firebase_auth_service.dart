@@ -10,35 +10,22 @@ class FirebaseAuthService implements IAuthService {
   Future<UserModel> signIn(
       {required String email, required String password}) async {
     try {
-      // Verifica se o e-mail já está associado a uma conta existente no Firebase
-      List<String> signInMethods =
-          await _auth.fetchSignInMethodsForEmail(email);
-
-      if (signInMethods.contains('password')) {
-        // Se 'password' estiver presente em signInMethods, significa que o e-mail já está registrado
-        final result = await _auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        log(result.user!.uid);
-
-        if (result.user != null) {
-          return UserModel(
+      final result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      if (result.user != null) {
+        return UserModel(
             name: result.user!.displayName,
-            email: result.user!.email,
-            id: result.user!.uid,
-          );
-        } else {
-          throw Exception('Usuário não encontrado');
-        }
+            email: result.user!.email!,
+            id: result.user!.uid);
       } else {
-        throw Exception('Usuário não cadastrado');
+        throw Exception();
       }
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.message ?? 'Erro');
-    } catch (e) {
-      rethrow;
+      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {}
+      log('ONLY e ${e.toString()}');
+      log('CODE ${e.code.toString()}');
+      log('MESSAGE${e.message.toString()}');
+      throw e.message ?? 'Erro';
     }
   }
 
@@ -52,15 +39,27 @@ class FirebaseAuthService implements IAuthService {
         result.user!.updateDisplayName(name);
 
         return UserModel(
-            name: result.user!.displayName,
+            name: _auth.currentUser?.displayName,
             email: result.user!.email!,
             id: result.user!.uid);
       } else {
-        throw Exception('Usuário não cadastrado');
+        throw Exception();
       }
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
+      // if (e.message == 'INVALID_LOGIN_CREDENTIALS') {
+      log('código ${e.code.toString()}');
+      log('${e.message.toString()}');
       throw e.message ?? 'Erro';
+      // }
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      rethrow;
     }
   }
 }

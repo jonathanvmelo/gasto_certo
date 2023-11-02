@@ -8,4 +8,6 @@ abstract class IAuthService {
     required String email,
     required String password,
   });
+
+  Future<void> signOut() async {}
 }

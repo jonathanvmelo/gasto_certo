@@ -1,15 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-abstract class SignInState {}
+abstract class ISignInState {}
 
-class SignInStateInitial extends SignInState {}
+class SignInStateInitial extends ISignInState {}
 
-class SignInStateLoading extends SignInState {}
+class SignInStateLoading extends ISignInState {}
 
-class SignInStateError extends SignInState {
+class SignInStateProfile extends ISignInState {}
+
+class SignInStateError extends ISignInState {
   String? message;
   SignInStateError({
     this.message,
   });
 }
 
-class SignInStateSuccess extends SignInState {}
+class SignInStateSuccess extends ISignInState {}

@@ -1,15 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-abstract class SignUpState {}
+abstract class ISignUpState {}
 
-class SignUpInitialState extends SignUpState {}
+class SignUpInitialState extends ISignUpState {}
 
-class SignUpLoadingState extends SignUpState {}
+class SignUpLoadingState extends ISignUpState {}
 
-class SignUpErrorState extends SignUpState {
+class SignUpErrorState extends ISignUpState {
   final String message;
   SignUpErrorState({
     required this.message,
   });
 }
 
-class SignUpSuccessState extends SignUpState {}
+class SignUpSuccessState extends ISignUpState {}

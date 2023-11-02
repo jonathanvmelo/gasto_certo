@@ -7,7 +7,7 @@ import 'package:gasto_certo/app/common/utils/text_formatter.dart';
 import 'package:gasto_certo/app/common/widgets/custom_bottom_sheet.dart';
 import 'package:gasto_certo/app/common/widgets/custom_text_form_field.dart';
 import 'package:gasto_certo/app/common/widgets/primary_button.dart';
-import 'package:gasto_certo/app/features/home/pages/home_page.dart';
+import 'package:gasto_certo/app/features/pluggy/pluggy_page.dart';
 import 'package:gasto_certo/app/features/sign_in/sign_in_page.dart';
 import 'package:gasto_certo/app/features/sign_up/sign_up_controller.dart';
 import 'package:gasto_certo/app/features/sign_up/sign_up_state.dart';

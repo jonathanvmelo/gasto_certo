@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:gasto_certo/app/common/widgets/custom_text_form_field.dart';
 
 class PasswordTextForm extends StatefulWidget {
@@ -11,6 +12,7 @@ class PasswordTextForm extends StatefulWidget {
   final Widget? sufixIcon;
   final String? helperText;
   final FormFieldValidator<String>? validator;
+  final VoidCallback? onEditingComplete;
   const PasswordTextForm({
     Key? key,
     this.controller,
@@ -21,6 +23,7 @@ class PasswordTextForm extends StatefulWidget {
     this.sufixIcon,
     this.helperText,
     this.validator,
+    this.onEditingComplete,
   }) : super(key: key);
 
   @override
@@ -41,6 +44,10 @@ class _PasswordTextFormState extends State<PasswordTextForm> {
       maxLength: widget.maxLength,
       obscureText: isHidden,
       textCapitalization: TextCapitalization.none,
+      onEditingComplete: widget.onEditingComplete ??
+          () {
+            FocusScope.of(context).nextFocus();
+          },
       sufixIcon: InkWell(
         borderRadius: BorderRadius.circular(23),
         child: Icon(isHidden ? Icons.visibility : Icons.visibility_off),

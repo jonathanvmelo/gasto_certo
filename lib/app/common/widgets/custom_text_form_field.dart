@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:gasto_certo/app/common/constants/app_text_styles.dart';
 
 import '../constants/app_colors.dart';
@@ -19,6 +20,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool? obscureText;
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
+  final VoidCallback? onEditingComplete;
   const CustomTextFormField({
     Key? key,
     this.padding,
@@ -34,6 +36,7 @@ class CustomTextFormField extends StatefulWidget {
     this.obscureText,
     this.validator,
     this.inputFormatters,
+    this.onEditingComplete,
   }) : super(key: key);
 
   @override
@@ -69,6 +72,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             });
           }
         },
+        onEditingComplete: widget.onEditingComplete ??
+            () {
+              FocusScope.of(context).nextFocus();
+            },
         validator: widget.validator,
         obscureText: widget.obscureText ?? false,
         maxLength: widget.maxLength,
