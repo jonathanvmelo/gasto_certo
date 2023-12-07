@@ -87,108 +87,134 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: SingleChildScrollView(
-              child: Column(
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30, 60, 30, 60),
+          child: ListView(
+            children: [
+              Column(
                 children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
                   Center(
                     child: Image.asset('assets/images/logo.png',
                         width: 222), // child: Text(
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: Text(
-                      "Faça seu login!",
-                      style: AppTextStyle.mediumText18
-                          .copyWith(color: AppColors.darkBlue),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Form(
-                    key: _formkey,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: CustomTextFormField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            inputAction: TextInputAction.next,
-                            textCapitalization: TextCapitalization.none,
-                            labelText: 'Seu e-mail',
-                            validator: Validator.validateEmail,
-                          ),
-                        ),
-                        PasswordTextForm(
-                          controller: _passwordController,
-                          labelText: 'senha',
-                          hintText: '********',
-                          helperText:
-                              "A senha deve ter entre 6 e 12 caracteres",
-                          validator: Validator.validatePassword,
-                          onEditingComplete: () {
-                            login();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 100),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 80,
-                        ),
-                        PrimaryButton(
-                            color: AppColors.darkBlue,
-                            textButton: 'Entrar',
-                            onTap: () {
-                              login();
-                            }),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        PrimaryButton(
-                            color: AppColors.ligthBlue,
-                            textColor: AppColors.darkBlue,
-                            textButton: 'Cadastre-se',
-                            onTap: () {
-                              Navigator.of(context).popAndPushNamed('/signUp');
-                            }),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextButton(
-                          child: Text(
-                            "Esqueci minha senha!",
-                            style: AppTextStyle.mediumText18
-                                .copyWith(color: AppColors.darkBlue),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).popAndPushNamed('/forgot');
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Center(
+                  //   child: Text(
+                  //     "Faça seu login!",
+                  //     style: AppTextStyle.mediumText18
+                  //         .copyWith(color: AppColors.greyDark),
+                  //   ),
+                  // ),
                 ],
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: CustomTextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          inputAction: TextInputAction.next,
+                          textCapitalization: TextCapitalization.none,
+                          labelText: 'Seu e-mail',
+                          validator: Validator.validateEmail,
+                        ),
+                      ),
+                      PasswordTextForm(
+                        controller: _passwordController,
+                        labelText: 'senha',
+                        hintText: '********',
+                        helperText: "A senha deve ter entre 6 e 12 caracteres",
+                        validator: Validator.validatePassword,
+                        onEditingComplete: () {
+                          login();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(0, 40, 0, 30),
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PrimaryButton(
+                        color: AppColors.grey,
+                        textButton: 'Entrar',
+                        onTap: () {
+                          login();
+                        }),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    PrimaryButton(
+                        color: AppColors.greylight,
+                        textColor: AppColors.greyDark,
+                        textButton: 'Cadastre-se',
+                        onTap: () {
+                          Navigator.of(context).popAndPushNamed('/signUp');
+                        }),
+                    TextButton(
+                      child: Text(
+                        "Esqueci minha senha!",
+                        style: AppTextStyle.mediumText18
+                            .copyWith(color: AppColors.greyDark),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).popAndPushNamed('/forgot');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: AppColors.grey.withOpacity(0.3),
+                        height: 0.5,
+                      ),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: const Text('ou')),
+                    Expanded(
+                      child: Divider(
+                        color: AppColors.grey.withOpacity(0.3),
+                        height: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        child: Image.asset('assets/images/google_circle.png',
+                            width: 50, height: 50, fit: BoxFit.cover),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       ),

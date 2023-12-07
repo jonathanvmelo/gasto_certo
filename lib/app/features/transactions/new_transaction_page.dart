@@ -3,28 +3,23 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:gasto_certo/app/common/constants/app_colors.dart';
 import 'package:gasto_certo/app/common/constants/app_text_styles.dart';
+import 'package:gasto_certo/app/common/constants/functions.dart';
 import 'package:gasto_certo/app/data/models/expense_model.dart';
-import 'package:gasto_certo/app/repositories/firebase_expense_repository.dart';
+import 'package:gasto_certo/app/features/transactions/new_transaction_bloc.dart';
+import 'package:gasto_certo/app/features/transactions/transaction_state.dart';
 
-class Transactions extends StatefulWidget {
-  const Transactions({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _TransactionsState createState() => _TransactionsState();
-}
-
-class _TransactionsState extends State<Transactions> {
+class NewTransactionsPage extends StatelessWidget {
   final expenseController = TextEditingController();
   final amountController = TextEditingController();
   final dateController = TextEditingController();
   final iconColorController = TextEditingController();
+
+  final bloc = NewTransactionBloc();
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-        if (mounted) await FirebaseExpenseRepository.getAllExpense();
-      },
+      onRefresh: () async {},
       child: Scaffold(
         appBar: AppBar(
           // leading:
@@ -33,45 +28,42 @@ class _TransactionsState extends State<Transactions> {
           toolbarHeight: 80,
           title: const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Transações'),
+            child: Text('New Transações'),
           ),
           actions: [
             IconButton(
                 onPressed: () {}, icon: const Icon(Icons.notification_add))
           ],
         ),
-        body: FutureBuilder(
-          future: FirebaseExpenseRepository.getAllExpense(),
+        body: StreamBuilder(
+          stream: bloc.outputStream,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (!snapshot.hasData || snapshot.data?.expensiveList == null) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: Text('Sem dados'),
               );
-            } else if (snapshot.hasError) {
+            }
+
+            if (snapshot.hasError) {
               return Center(
                 child: Container(
                     decoration: const BoxDecoration(boxShadow: []),
                     child: Text('Error: ${snapshot.error}')),
               );
-            } else {
-              List<ExpenseModel> expenses = snapshot.data as List<ExpenseModel>;
-              return ListView.builder(
-                itemCount: expenses.length,
-                itemBuilder: (context, index) {
-                  return lisTile(
-                      icon: Icons.shop,
-                      iconColor: expenses[index].iconColor,
-                      description: expenses[index].description!,
-                      amount: expenses[index].amount,
-                      date: expenses[index].date!);
-
-                  // ListTile(
-                  //   leading: Text(messages[index].message),
-                  //   title: Text(messages[index].date),
-                  // );
-                },
-              );
             }
+
+            List<ExpenseModel> expenses = snapshot.data!.expensiveList!;
+            return ListView.builder(
+              itemCount: expenses.length,
+              itemBuilder: (context, index) {
+                return lisTile(
+                    icon: Icons.shop,
+                    iconColor: expenses[index].iconColor,
+                    description: expenses[index].description!,
+                    amount: Functions.priceFormatter(expenses[index].amount!),
+                    date: expenses[index].date!);
+              },
+            );
           },
         ),
         floatingActionButtonLocation:
@@ -118,6 +110,12 @@ class _TransactionsState extends State<Transactions> {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                            // bloc.inputTransaction.add(PostTransaction(
+                            //     transacao: ExpenseModel(
+                            //         description: expenseController.text,
+                            //         date: dateController.text,
+                            //         amount: double.parse(amountController.text),
+                            //         transactions: 2)));
                             // FirebaseExpenseRepository.addExpense(
                             //   ExpenseModel(
                             //       iconColor: int.parse(
@@ -139,8 +137,6 @@ class _TransactionsState extends State<Transactions> {
                 ),
               ),
             );
-            // customModalBottomSheet(context, buttonText: 'Adicione uma despesa');
-            //FirebaseRepository.addMessage(messageModel)
           },
           backgroundColor: AppColors.darkBlue,
           child: const Icon(
@@ -161,7 +157,7 @@ class _TransactionsState extends State<Transactions> {
     required IconData icon,
     int? iconColor,
     required String description,
-    double? amount,
+    String? amount,
     required String date,
   }) {
     return Card(
@@ -177,9 +173,9 @@ class _TransactionsState extends State<Transactions> {
           children: [
             Text(
               date,
-              style: AppTextStyle.smallText,
+              style: AppTextStyle.smallText14,
             ),
-            Text(amount.toString(), style: AppTextStyle.mediumText18),
+            Text(amount ?? "", style: AppTextStyle.mediumText18),
           ],
         ),
       ),

@@ -22,11 +22,10 @@ class ExpenseModel {
   ExpenseModel.fromJson(Map<String, dynamic> json, String id) {
     id = json['id'] ?? "";
     description = json['description'] ?? "";
-    amount = json['amount'] ?? "";
+    amount = (json['amount'] as num).toDouble();
     date = json['date'] ?? "";
     iconColor = json['iconColor'] ?? 4282536512;
     transactions = json['transactions'] ?? 0;
-    log(json['iconColor']);
   }
 
   Map<String, dynamic> toJson() {

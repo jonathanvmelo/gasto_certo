@@ -48,7 +48,7 @@ class FirebaseAuthService implements IAuthService {
     } on FirebaseAuthException catch (e) {
       // if (e.message == 'INVALID_LOGIN_CREDENTIALS') {
       log('código ${e.code.toString()}');
-      log('${e.message.toString()}');
+      // log('${e.message.toString()}');
       throw e.message ?? 'Erro';
       // }
     }

@@ -27,7 +27,7 @@ class LinkAccount extends StatelessWidget {
       ),
       body: Center(
           child: Container(
-        margin: EdgeInsets.all(30),
+        margin: const EdgeInsets.all(30),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

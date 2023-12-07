@@ -1,7 +1,10 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gasto_certo/app/common/constants/app_colors.dart';
+import 'package:gasto_certo/app/common/constants/routes.dart';
+import 'package:gasto_certo/app/common/extensions/sizes.dart';
 import 'package:gasto_certo/app/features/splash/splash_controller.dart';
 import 'package:gasto_certo/app/features/splash/splash_state.dart';
 import 'package:gasto_certo/app/locator.dart';
@@ -15,13 +18,15 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final _splashController = getIt.get<SplashController>();
+  User? userInfo = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => Sizes.init(context));
     _splashController.isUserLogged();
     _splashController.addListener(() {
       if (_splashController.state is SplashStateSuccess) {
-        Navigator.of(context).pushReplacementNamed('/homeBottomBar');
+        Navigator.of(context).pushReplacementNamed(NamedRoute.customBottom);
         log('if');
         log('if');
       } else {

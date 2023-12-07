@@ -13,14 +13,11 @@
 // }
 import 'package:flutter/foundation.dart';
 import 'package:gasto_certo/app/features/pluggy/pluggy_state.dart';
-//TODO: import states
 
 class PluggyController extends ChangeNotifier {
-  //TODO: inject service
-  //TODO: generate constructor
-
   IPluggyState state = PluggyStateInitial();
 
+  // ignore: unused_element
   void _changeState(IPluggyState newState) {
     state = newState;
     notifyListeners();

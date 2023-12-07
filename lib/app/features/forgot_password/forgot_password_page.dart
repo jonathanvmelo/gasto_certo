@@ -150,7 +150,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           height: 20,
         ),
         PrimaryButton(
-          color: AppColors.ligthBlue,
+          color: AppColors.ligthBlue2,
           textColor: AppColors.darkBlue,
           textButton: 'Voltar',
           onTap: () {

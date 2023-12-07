@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gasto_certo/app/common/constants/routes.dart';
 import 'package:gasto_certo/app/common/themes/default_theme.dart';
-import 'package:gasto_certo/app/features/bottom_bar/home_bottom_bar_page.dart';
+import 'package:gasto_certo/app/features/dashboard/dashboard_home.dart';
+import 'package:gasto_certo/app/features/home_bottom_bar/custom_page_view_page.dart';
+import 'package:gasto_certo/app/features/home_bottom_bar/home_bottom_bar_page.dart';
 import 'package:gasto_certo/app/features/forgot_password/forgot_password_page.dart';
 import 'package:gasto_certo/app/features/pluggy/pluggy_page.dart';
 import 'package:gasto_certo/app/features/linkAccount/link_account_page.dart';
@@ -18,21 +22,29 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // localizationsDelegates: const [
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate
+      // ],
+      // supportedLocales: const [Locale('pt', 'BR')],
       debugShowCheckedModeBanner: false,
       theme: defaultTheme,
-      initialRoute: '/splash',
+      initialRoute: NamedRoute.initial,
       routes: {
+        NamedRoute.initial: (context) => const SplashPage(),
+        NamedRoute.dashHome: (context) => DashboardHome(),
+        NamedRoute.signIn: (context) => const SignInPage(),
+        NamedRoute.signUp: (context) => SignUpPage(),
+        NamedRoute.forgot: (context) => const ForgotPassword(),
+        NamedRoute.onBoarding: (context) => const OnboardingPage(),
+        NamedRoute.selectProfile: (context) => const SelectProfilePage(),
+        NamedRoute.newPassword: (context) => const NewPassword(),
+        NamedRoute.linkAccount: (context) => const LinkAccount(),
+        //NamedRoute.homeBottomBar: (context) => const HomeBottomBarPage(),
+        NamedRoute.homePage: (context) => const HomePage(),
+        NamedRoute.customBottom: (context) => const CustomPageViewPage(),
+
         //'/onBoarding': (context) => OnboardingPage(),
-        '/splash': (context) => const SplashPage(),
-        '/signIn': (context) => const SignInPage(),
-        '/forgot': (context) => const ForgotPassword(),
-        '/signUp': (context) => const SignUpPage(),
-        'onBoarding': (context) => const OnboardingPage(),
-        '/selectProfile': (context) => const SelectProfilePage(),
-        '/newPassword': (context) => const NewPassword(),
-        '/homeBottomBar': (context) => const HomeBottomBarPage(),
-        '/linkAccount': (context) => const LinkAccount(),
-        '/homePage': (context) => const HomePage(),
       },
     );
   }

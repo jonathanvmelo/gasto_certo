@@ -2,38 +2,37 @@
 import 'package:flutter/material.dart';
 import 'package:gasto_certo/app/common/constants/app_colors.dart';
 
-class Investing extends StatefulWidget {
-  const Investing({super.key});
+class EducationPage extends StatefulWidget {
+  const EducationPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _InvestingState createState() => _InvestingState();
+  _EducationPageState createState() => _EducationPageState();
 }
 
-class _InvestingState extends State<Investing> {
+class _EducationPageState extends State<EducationPage> {
   String dropdownValue = 'Item 1';
 
   List<DropDowGpt> dropList = [
     DropDowGpt(
-        title: 'Dicas para iniciar nos investimentos..',
+        title: 'Dicas para economizar dinheiro.',
         description:
             'Para economizar dinheiro, evite gastos supérfluos, mantenha um orçamento mensal, busque promoções e crie um fundo de emergência para lidar com imprevistos.'),
     DropDowGpt(
-        title:
-            'Como começar a investir com pouco dinheiro e ampliar meus investimentos ao longo do tempo?.',
+        title: 'Análise detalhada da situação financeira.',
         description:
             'Gasto Certo - Seu app de controle e educação financeira.'),
     DropDowGpt(
         title:
-            'Como analisar e interpretar indicadores financeiros e econômicos para tomar decisões informadas sobre investimentos?',
+            'Quais são as tendências nos meus padrões de gastos ao longo do tempo?',
         description: 'Gasto Certo - Seu app de controle e educação financeira'),
     DropDowGpt(
         title:
-            'Como acompanhar o desempenho dos meus investimentos e saber se estou no caminho certo para alcançar meus objetivos financeiros?',
+            'Como posso planejar financeiramente para grandes gastos futuros como uma casa nova ou um carro?',
         description: 'Gasto Certo - Seu app de controle e educação financeira'),
     DropDowGpt(
         title:
-            'O que fazer em caso de perda de dinheiro em um investimento e como evitar erros semelhantes no futuro?',
+            'Quais são os principais itens que estão afetando negativamente meu orçamento?',
         description: 'Gasto Certo - Seu app de controle e educação financeira'),
     DropDowGpt(
         title:
@@ -44,10 +43,10 @@ class _InvestingState extends State<Investing> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(onPressed: null, icon: Icon(Icons.person)),
+          leading: const IconButton(onPressed: null, icon: Icon(Icons.person)),
           toolbarHeight: 80,
           backgroundColor: AppColors.darkBlue,
-          title: const Text('Investimentos'),
+          title: const Text('Educação Financeira'),
         ),
         body: ListView(
           children: [dropDow()],

@@ -1,4 +1,4 @@
-// ignore: file_names
+// ignore: file_names, constant_identifier_names
 const MOUNTHS = [
   'Janeiro',
   'Fevereiro',

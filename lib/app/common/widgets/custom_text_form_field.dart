@@ -44,8 +44,9 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
-  final defaultBorder =
-      const OutlineInputBorder(borderSide: BorderSide(color: AppColors.grey));
+  final defaultBorder = const OutlineInputBorder(
+      borderSide:
+          BorderSide(color: AppColors.grey, width: 0.1, strokeAlign: 5));
 
   String? _helperText;
 
@@ -86,8 +87,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.words,
         decoration: InputDecoration(
+          suffixIconColor: AppColors.orange,
           helperMaxLines: 3,
           helperText: _helperText,
+          errorStyle: TextStyle(color: AppColors.orange),
           suffixIcon: widget.sufixIcon,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: widget.hintText,
@@ -95,7 +98,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           labelStyle: AppTextStyle.inputText.copyWith(color: AppColors.grey),
           focusedBorder: defaultBorder.copyWith(
               borderSide: const BorderSide(color: AppColors.darkBlue)),
-          errorBorder: defaultBorder,
+          errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.orange, width: 0.5)),
           focusedErrorBorder: defaultBorder,
           enabledBorder: defaultBorder.copyWith(),
           disabledBorder: defaultBorder,

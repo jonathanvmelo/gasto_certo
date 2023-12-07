@@ -7,7 +7,7 @@ import 'package:gasto_certo/app/services/secury_storage.dart';
 
 class SignInController extends ChangeNotifier {
   final IAuthService _service;
-  final secure = SecureStorage();
+  final secure = const SecureStorage();
 
   SignInController(
     this._service,

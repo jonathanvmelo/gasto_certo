@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gasto_certo/app.dart';
 import 'package:gasto_certo/app/locator.dart';
 import 'package:gasto_certo/firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,5 +14,5 @@ void main() async {
   setupDependencies();
   await dotenv.load(fileName: ".env");
 
-  runApp(const App());
+  initializeDateFormatting().then((_) => runApp(const App()));
 }

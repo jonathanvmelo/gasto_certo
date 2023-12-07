@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomMounthListTileWidget extends StatefulWidget {
+  const CustomMounthListTileWidget({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _CustomMounthListTileWidgetState createState() =>
       _CustomMounthListTileWidgetState();
 }
@@ -28,7 +31,7 @@ class _CustomMounthListTileWidgetState
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          icon: Icon(Icons.arrow_left),
+          icon: const Icon(Icons.arrow_left),
           onPressed: () {
             if (_mesAtual == 11) {
               _proximoMes();
@@ -39,7 +42,7 @@ class _CustomMounthListTileWidgetState
         ),
         Text(
           mesesDoAno[_mesAtual],
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20),
         ),
         IconButton(
           onPressed: () {
@@ -49,7 +52,7 @@ class _CustomMounthListTileWidgetState
               _mesAnterior();
             }
           },
-          icon: Icon(Icons.arrow_right),
+          icon: const Icon(Icons.arrow_right),
         )
       ],
     );
@@ -75,9 +78,9 @@ void main() {
   runApp(MaterialApp(
     home: Scaffold(
       appBar: AppBar(
-        title: Text("ListTile com meses"),
+        title: const Text("ListTile com meses"),
       ),
-      body: Center(
+      body: const Center(
         child: CustomMounthListTileWidget(),
       ),
     ),

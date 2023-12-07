@@ -6,7 +6,10 @@ import 'package:gasto_certo/app/data/models/expense_model.dart';
 typedef NotifyRepositoryOnGetUpdatedList = void Function(List<ExpenseModel>);
 
 class FirebaseExpenseRepository {
-  static Future<ExpenseModel> addExpense(ExpenseModel expense) async {
+  final CollectionReference _expenseCollection =
+      FirebaseFirestore.instance.collection('despesas');
+
+  Future<ExpenseModel> addExpense({required ExpenseModel expense}) async {
     DocumentReference documentReference = await FirebaseFirestore.instance
         .collection('despesas')
         .add(expense.toJson());
@@ -15,7 +18,11 @@ class FirebaseExpenseRepository {
     return expense;
   }
 
-  static Future<List<ExpenseModel>> getAllExpense() async {
+  Future<ExpenseModel?> delete({required ExpenseModel expense}) async {
+    return null;
+  }
+
+  Future<List<ExpenseModel>> getAllExpense() async {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('despesas').get();
     List<ExpenseModel> expenses = [];
@@ -29,7 +36,7 @@ class FirebaseExpenseRepository {
     return expenses;
   }
 
-  static void litenList(NotifyRepositoryOnGetUpdatedList onGetUpdatedList) {
+  void litenList(NotifyRepositoryOnGetUpdatedList onGetUpdatedList) {
     FirebaseFirestore.instance
         .collection('despesas')
         .snapshots()

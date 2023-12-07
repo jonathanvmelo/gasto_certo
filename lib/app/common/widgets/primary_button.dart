@@ -21,34 +21,37 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Ink(
-      height: 64,
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-              color: AppColors.grey,
-              blurRadius: 5,
-              blurStyle: BlurStyle.normal,
-              spreadRadius: -3,
-              offset: Offset(0, 5)),
-        ],
-        borderRadius: _borderRadius,
-        color: color,
-        // gradient: LinearGradient(
-        //     begin: Alignment.topCenter,
-        //     end: Alignment.bottomCenter,
-        //     colors: onTap != null
-        //         ? AppColors.gradientGreen
-        //         : AppColors.gradientGrey),
-      ),
-      child: InkWell(
-        borderRadius: _borderRadius,
-        onTap: onTap,
-        child: Align(
-          child: Text(
-            textButton,
-            style: AppTextStyle.mediumText18
-                .copyWith(color: textColor ?? AppColors.white),
+    return Material(
+      color: AppColors.transparent,
+      child: Ink(
+        height: 50,
+        decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+                color: AppColors.grey,
+                blurRadius: 5,
+                blurStyle: BlurStyle.normal,
+                spreadRadius: -3,
+                offset: Offset(0, 5)),
+          ],
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          color: color,
+          // gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     colors: onTap != null
+          //         ? AppColors.gradientGreen
+          //         : AppColors.gradientGrey),
+        ),
+        child: InkWell(
+          borderRadius: _borderRadius,
+          onTap: onTap,
+          child: Align(
+            child: Text(
+              textButton,
+              style: AppTextStyle.mediumText18
+                  .copyWith(color: textColor ?? AppColors.white),
+            ),
           ),
         ),
       ),

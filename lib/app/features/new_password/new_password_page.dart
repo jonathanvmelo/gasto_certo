@@ -141,7 +141,7 @@ class _NewPasswordState extends State<NewPassword> {
                       height: 30,
                     ),
                     PrimaryButton(
-                      color: AppColors.ligthBlue,
+                      color: AppColors.ligthBlue2,
                       textColor: AppColors.darkBlue,
                       textButton: 'Voltar',
                       onTap: () {

@@ -13,6 +13,17 @@ class AppTextStyle {
     fontSize: 36.0,
   );
 
+  static const TextStyle mediumText26 = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600,
+    fontSize: 26.0,
+  );
+  static const TextStyle mediumText24 = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600,
+    fontSize: 24.0,
+  );
+
   static const TextStyle mediumText22 = TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.w600,
@@ -31,10 +42,20 @@ class AppTextStyle {
     fontSize: 18.0,
   );
 
-  static const TextStyle smallText = TextStyle(
+  static const TextStyle smallText14 = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w400,
+    fontSize: 14.0,
+  );
+  static const TextStyle smallText12 = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w400,
+    fontSize: 12.0,
+  );
+  static const TextStyle smallText16 = TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.w500,
-    fontSize: 14.0,
+    fontSize: 16.0,
   );
 
   static const TextStyle inputText = TextStyle(
