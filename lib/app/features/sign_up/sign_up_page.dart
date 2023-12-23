@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gasto_certo/app/common/constants/app_colors.dart';
 import 'package:gasto_certo/app/common/constants/app_text_styles.dart';
@@ -106,23 +107,23 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ListView(
               children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Center(
-                  child: Text(
-                    "Crie sua conta",
-                    style: AppTextStyle.mediumText18
-                        .copyWith(color: AppColors.darkBlue),
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    "demora só um minuto",
-                    style: AppTextStyle.mediumText18
-                        .copyWith(color: AppColors.darkBlue),
-                  ),
-                ),
+                // const SizedBox(
+                //   height: 50,
+                // ),
+                // Center(
+                //   child: Text(
+                //     "Crie sua conta",
+                //     style: AppTextStyle.mediumText18
+                //         .copyWith(color: AppColors.darkBlue),
+                //   ),
+                // ),
+                // Center(
+                //   child: Text(
+                //     "demora só um minuto",
+                //     style: AppTextStyle.mediumText18
+                //         .copyWith(color: AppColors.darkBlue),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 24,
                 ),

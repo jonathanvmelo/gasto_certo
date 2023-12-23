@@ -1,9 +1,13 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:gasto_certo/app/common/widgets/custom_snack_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleAuthService {
+  // ignore: body_might_complete_normally_nullable
   Future<User?> signInWithGoogle() async {
     try {
       FirebaseAuth auth = FirebaseAuth.instance;
@@ -41,6 +45,23 @@ class GoogleAuthService {
       if (e.code == 'account-exist-with-different-credential') {}
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  static Future<void> signOut({required BuildContext context}) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    try {
+      if (!kIsWeb) {
+        await googleSignIn.signOut();
+      }
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        CustomSnackBar.customSnackBar(
+          content: 'Error signing out. Try again.',
+        ),
+      );
     }
   }
 }

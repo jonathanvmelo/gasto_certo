@@ -1,42 +1,39 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:gasto_certo/app/common/constants/routes.dart';
+import 'package:gasto_certo/app/common/utils/functions.dart';
+import 'package:gasto_certo/app/services/google_auth_service.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
+import 'package:gasto_certo/app/bloc/bloc-expenses/bloc_transaction_firebase.dart';
 import 'package:gasto_certo/app/common/constants/app_colors.dart';
 import 'package:gasto_certo/app/common/constants/app_text_styles.dart';
-import 'package:gasto_certo/app/common/constants/functions.dart';
-import 'package:gasto_certo/app/common/extensions/sizes.dart';
-import 'package:gasto_certo/app/data/models/expense_model.dart';
-import 'package:gasto_certo/app/features/dashboard/dashboard_bloc.dart';
-import 'package:gasto_certo/app/features/dashboard/dashboard_event.dart';
-import 'package:gasto_certo/app/features/dashboard/dashboard_state.dart';
+import 'package:gasto_certo/app/features/dashboard/add_transaction_page.dart';
 
-class DashboardHome extends StatefulWidget {
+// ignore: must_be_immutable
+class DashboardHome extends StatelessWidget {
+  PageController? controller;
   DashboardHome({
     Key? key,
+    this.controller,
   }) : super(key: key);
 
-  @override
-  State<DashboardHome> createState() => _DashboardHomeState();
-}
-
-class _DashboardHomeState extends State<DashboardHome> {
-  final bloc = DashboardBloc();
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  // final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   User? userInfo = FirebaseAuth.instance.currentUser;
 
-  @override
-  void initState() {
-    bloc.input.add(GetDashboardTransiction());
-    super.initState();
-  }
+  GoogleSignInAccount? user;
+  String invited = 'Convidado';
 
+  // @override
   @override
   Widget build(BuildContext context) {
-    log(userInfo?.photoURL ?? "");
+    //log(userInfo?.photoURL ?? "");
+
     return Scaffold(
       body: Stack(
         children: [
@@ -61,19 +58,24 @@ class _DashboardHomeState extends State<DashboardHome> {
             ),
           ),
           Positioned(
-              top: 74,
+              top: 78,
               left: 24,
               right: 24,
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    child: Image.network(
-                      userInfo?.photoURL ?? "",
-                      height: 35,
-                      width: 35,
-                    ),
-                  ),
+                  userInfo?.photoURL != null
+                      ? ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(25)),
+                          child: Image.network(
+                            userInfo?.photoURL ?? "",
+                            height: 40,
+                            width: 40,
+                          ),
+                        )
+                      : CircleAvatar(
+                          child: Text(invited[0]),
+                        )
                 ],
               )),
           Positioned(
@@ -89,11 +91,11 @@ class _DashboardHomeState extends State<DashboardHome> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bom Dia,',
+                      Functions.timeMessage(DateTime.now()),
                       style: AppTextStyle.smallText14
                           .copyWith(color: AppColors.white),
                     ),
-                    Text(userInfo?.displayName ?? "",
+                    Text(userInfo?.displayName ?? invited,
                         style: AppTextStyle.mediumText18
                             .apply(color: AppColors.white)),
                   ],
@@ -106,7 +108,11 @@ class _DashboardHomeState extends State<DashboardHome> {
                     alignment: const AlignmentDirectional(0.3, -0.25),
                     children: [
                       IconButton.outlined(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await GoogleAuthService.signOut(context: context);
+                          log(userInfo!.displayName!);
+                          Navigator.of(context).pushNamed(NamedRoute.signIn);
+                        },
                         icon: const Icon(
                           Icons.notifications_none_sharp,
                           size: 30,
@@ -130,7 +136,7 @@ class _DashboardHomeState extends State<DashboardHome> {
           Positioned(
             left: 24,
             right: 24,
-            top: 195,
+            top: 165,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
               decoration: const BoxDecoration(
@@ -142,7 +148,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                         AppColors.grey,
                         AppColors.greyDark,
                       ]),
-                  //color: AppColors.grey,
                   borderRadius: BorderRadius.all(Radius.circular(16))),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -161,25 +166,29 @@ class _DashboardHomeState extends State<DashboardHome> {
                                 .apply(color: AppColors.white),
                           ),
                           Text(
-                            'R\$ 1.500,00',
-                            style: AppTextStyle.mediumText18
+                            Functions.priceFormatter(
+                                Provider.of<BlocTransactionFirebase>(context,
+                                        listen: false)
+                                    .getBalance()),
+                            style: AppTextStyle.mediumText22
                                 .apply(color: AppColors.white),
                           ),
                         ],
                       ),
-                      IconButton(
-                        onPressed: () => PopupMenuButton(
-                          itemBuilder: (context) => [
-                            const PopupMenuItem(
-                              child: Text('Item - 1'),
-                            ),
-                          ],
-                        ),
-                        icon: const Icon(
-                          Icons.more_horiz,
-                          color: AppColors.white,
-                        ),
-                      ),
+                      MonthWidget(),
+                      // IconButton(
+                      //   onPressed: () => PopupMenuButton(
+                      //     itemBuilder: (context) => [
+                      //       const PopupMenuItem(
+                      //         child: Text('Item - 1'),
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   icon: const Icon(
+                      //     Icons.more_horiz,
+                      //     color: AppColors.white,
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -188,16 +197,72 @@ class _DashboardHomeState extends State<DashboardHome> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      receitaDespesa(
-                          description: 'Receitas',
-                          icon: Icons.arrow_upward,
-                          value: '3.800,00'),
-                      receitaDespesa(
-                          description: 'Despesas',
-                          icon: Icons.arrow_downward,
-                          value: '2.300,00'),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_circle_up_outlined,
+                            size: 40,
+                            color: AppColors.white.withOpacity(0.5),
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Receitas',
+                                style: AppTextStyle.smallText12.apply(
+                                    color: AppColors.white.withOpacity(0.7)),
+                              ),
+                              Text(
+                                Functions.priceFormatter(
+                                    Provider.of<BlocTransactionFirebase>(
+                                            context,
+                                            listen: false)
+                                        .getTotalIcomes()),
+                                style: AppTextStyle.smallText14
+                                    .apply(color: AppColors.white),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.arrow_circle_down,
+                            size: 40,
+                            color: AppColors.white.withOpacity(0.5),
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Despesas',
+                                style: AppTextStyle.smallText12.apply(
+                                    color: AppColors.white.withOpacity(0.7)),
+                              ),
+                              Text(
+                                  Functions.priceFormatter(
+                                      Provider.of<BlocTransactionFirebase>(
+                                              context,
+                                              listen: false)
+                                          .getTotalExpenses()),
+                                  style: AppTextStyle.smallText14.apply(
+                                    color: AppColors.white,
+                                  ))
+                            ],
+                          ),
+                        ],
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -206,7 +271,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             left: 24,
             right: 24,
             bottom: 0,
-            top: 410,
+            top: 390,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 0),
               child: Column(
@@ -215,15 +280,23 @@ class _DashboardHomeState extends State<DashboardHome> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Historico de transações',
+                        'Últimas de transações',
                         style: AppTextStyle.smallText16.apply(
                           color: AppColors.black,
                         ),
                       ),
-                      Text(
-                        'Veja mais',
-                        style: AppTextStyle.smallText12
-                            .apply(color: AppColors.black.withOpacity(0.5)),
+                      InkWell(
+                        onTap: () {
+                          // controller!.jumpToPage(2);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const AddTransactionPage()));
+                        },
+                        child: Text(
+                          'Veja mais',
+                          style: AppTextStyle.smallText12
+                              .apply(color: AppColors.black.withOpacity(0.5)),
+                        ),
                       ),
                     ],
                   ),
@@ -231,95 +304,76 @@ class _DashboardHomeState extends State<DashboardHome> {
                     height: 15,
                   ),
                   Expanded(
-                    child: StreamBuilder(
-                      stream: bloc.output,
-                      builder: (context, state) {
-                        if (state is DashboardStateLoading) {
-                          return const Center(
-                            child: CupertinoActivityIndicator(),
-                          );
-                        }
-                        if (state is DashboardStateError) {
-                          return Center(
-                            child: Text(state.error.toString()),
-                          );
-                        }
-                        List<ExpenseModel> list =
-                            state.data?.transactionList ?? [];
-
-                        return
-                            // AnimatedList(
-                            //   //key: _listKey,
-                            //   initialItemCount: list.length,
-                            //   padding: EdgeInsets.zero,
-                            //   itemBuilder: (context, index, animation) {
-                            //     final color = index % 2 == 0
-                            //         ? AppColors.green
-                            //         : AppColors.red;
-                            //     final value = index % 2 == 0
-                            //         ? "+ R\$ 150,00"
-                            //         : "- R\$ 100,00";
-                            //     return FadeTransition(
-                            //       opacity: animation,
-                            //       child: Container(
-                            //         padding: EdgeInsets.zero,
-                            //         height: 50,
-                            //         child: ListTile(
-                            //           contentPadding: const EdgeInsets.symmetric(
-                            //             horizontal: 8,
-                            //           ),
-                            //           leading:
-                            //               const Icon(Icons.access_alarm_rounded),
-                            //           title: Text(list[index].description!),
-                            //           subtitle: const Text('Hoje'),
-                            //           trailing: Text(
-                            //             Functions.priceFormatter(
-                            //                 list[index].amount!),
-                            //             style: TextStyle(color: color),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     );
-                            //   },
-                            // );
-
-                            Container(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          child: ListView.builder(
-                            // separatorBuilder: (context, index) => Divider(),
-                            padding: EdgeInsets.zero,
-                            itemCount: list.length,
-                            itemBuilder: (context, index) {
-                              final item = list[index];
-                              final color = item.amount!.isNegative
-                                  ? AppColors.red
-                                  : AppColors.green;
-                              // final value = item. % 2 == 0
-                              //     ? "+ R\$ 150,00"
-                              //     : "- R\$ 100,00";
-                              return Container(
-                                padding: EdgeInsets.zero,
-                                height: 50,
-                                child: ListTile(
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  leading:
-                                      const Icon(Icons.access_alarm_rounded),
-                                  title: Text(list[index].description!),
-                                  subtitle: const Text('Hoje'),
-                                  trailing: Text(
-                                    Functions.priceFormatter(
-                                        list[index].amount!),
-                                    style: TextStyle(color: color),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                      child: StreamBuilder(
+                    initialData: Provider.of<BlocTransactionFirebase>(context)
+                        .expenseList,
+                    stream:
+                        Provider.of<BlocTransactionFirebase>(context).output,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    ),
-                  ),
+                      }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      }
+                      return ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (context, index) {
+                          final item = snapshot.data?[index];
+                          final color = item!.amount!.isNegative
+                              ? AppColors.red
+                              : AppColors.green;
+
+                          return Container(
+                            padding: EdgeInsets.zero,
+                            height: 50,
+                            child: Slidable(
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    flex: 2,
+                                    onPressed: (context) {
+                                      Provider.of<BlocTransactionFirebase>(
+                                              context,
+                                              listen: false)
+                                          .deleteExpense(transaction: item);
+                                    },
+                                    backgroundColor: AppColors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                  ),
+                                  SlidableAction(
+                                    flex: 2,
+                                    onPressed: doNothing,
+                                    backgroundColor: AppColors.greylight,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.cancel,
+                                  ),
+                                ],
+                              ),
+                              child: ListTile(
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                leading: const Icon(Icons.access_alarm_rounded),
+                                title: Text(item.description ?? ""),
+                                subtitle: Text(item.date ?? ""),
+                                trailing: Text(
+                                  Functions.priceFormatter(item.amount ?? 0),
+                                  style: TextStyle(color: color),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )),
                 ],
               ),
             ),
@@ -328,6 +382,8 @@ class _DashboardHomeState extends State<DashboardHome> {
       ),
     );
   }
+
+  doNothing(BuildContext context) {}
 
   receitaDespesa(
       {required String description,
@@ -364,6 +420,33 @@ class _DashboardHomeState extends State<DashboardHome> {
               style: AppTextStyle.smallText16.apply(color: AppColors.white),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class MonthWidget extends StatelessWidget {
+  const MonthWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_left_outlined),
+          onPressed: () {},
+        ),
+        Text(
+          Functions.currentMonth(),
+          style: AppTextStyle.smallText16.copyWith(color: AppColors.white),
+        ),
+        IconButton(
+          icon: Icon(Icons.arrow_right_outlined),
+          onPressed: () {},
         ),
       ],
     );

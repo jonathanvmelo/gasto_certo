@@ -16,8 +16,8 @@ Future<void> customModalBottomSheet(
     backgroundColor: Colors.transparent,
     context: context,
     builder: (BuildContext context) {
-      return WillPopScope(
-        onWillPop: () => Future.value(isDismissible),
+      return PopScope(
+        onPopInvoked: (didPop) => Future.value(isDismissible),
         child: Container(
           decoration: const BoxDecoration(
             color: AppColors.white,

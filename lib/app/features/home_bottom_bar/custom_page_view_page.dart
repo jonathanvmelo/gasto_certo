@@ -3,14 +3,16 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gasto_certo/app/features/transactions/new_transaction_page.dart';
+import 'package:gasto_certo/app/bloc/bloc-expenses/bloc_transaction_firebase.dart';
+import 'package:gasto_certo/app/common/enums/enum_categories.dart';
+import 'package:gasto_certo/app/data/models/transaction_model.dart';
+import 'package:gasto_certo/app/features/dashboard/dashboard_home.dart';
 import 'package:intl/intl.dart';
-
 import 'package:gasto_certo/app/common/constants/app_colors.dart';
 import 'package:gasto_certo/app/common/widgets/custom_bottom_navigation_bar.dart';
-import 'package:gasto_certo/app/features/dashboard/dashboard_home.dart';
 import 'package:gasto_certo/app/features/education/education_page.dart';
 import 'package:gasto_certo/app/features/investing/investing_page.dart';
+import 'package:provider/provider.dart';
 
 class CustomPageViewPage extends StatefulWidget {
   final User? user;
@@ -25,12 +27,13 @@ class CustomPageViewPage extends StatefulWidget {
 
 class _CustomPageViewPageState extends State<CustomPageViewPage> {
   final _pageController = PageController();
+
   @override
   void initState() {
     super.initState();
 
     _pageController.addListener(() {
-      log(_pageController.page.toString());
+      // log(_pageController.page.toString());
     });
   }
 
@@ -40,18 +43,28 @@ class _CustomPageViewPageState extends State<CustomPageViewPage> {
       body: PageView(
         controller: _pageController,
         children: [
-          DashboardHome(),
+          DashboardHome(controller: _pageController),
           const EducationPage(),
           const InvestingPage(),
-          NewTransactionsPage()
+          const InvestingPage(),
+          //NewTransactionsPage()
           //const TransactionsPage()
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         backgroundColor: AppColors.grey,
         onPressed: () {
           final now = DateTime.now();
           log(now.toString());
+          //Teste adiciona tarefa
+          Provider.of<BlocTransactionFirebase>(context).addExpense(
+              expense: TransactionsModel(
+                  category: Categories.alimentacao,
+                  amount: -18.00,
+                  description: 'Almoço',
+                  id: '151',
+                  date: '18/12/2023'));
 
           // Obtém o fuso horário local
 
@@ -66,14 +79,10 @@ class _CustomPageViewPageState extends State<CustomPageViewPage> {
               DateFormat('dd/MM/yyyy - HH:mm').format(DateTime.now().toLocal());
 
           log('Data e hora: $formattedDateTime');
-          showDatePicker(
-              initialDate: DateTime.now(),
-              context: context,
-              firstDate: DateTime(2019),
-              lastDate: DateTime(2024));
         },
         child: const Icon(
           Icons.add,
+          color: AppColors.orange,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

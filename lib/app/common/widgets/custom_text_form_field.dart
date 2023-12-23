@@ -21,23 +21,25 @@ class CustomTextFormField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
   final VoidCallback? onEditingComplete;
-  const CustomTextFormField({
-    Key? key,
-    this.padding,
-    this.hintText,
-    this.labelText,
-    this.helperText,
-    this.textCapitalization,
-    this.controller,
-    this.keyboardType,
-    this.maxLength,
-    this.inputAction,
-    this.sufixIcon,
-    this.obscureText,
-    this.validator,
-    this.inputFormatters,
-    this.onEditingComplete,
-  }) : super(key: key);
+  final Color? sufixIconColor;
+  const CustomTextFormField(
+      {Key? key,
+      this.padding,
+      this.hintText,
+      this.labelText,
+      this.helperText,
+      this.textCapitalization,
+      this.controller,
+      this.keyboardType,
+      this.maxLength,
+      this.inputAction,
+      this.sufixIcon,
+      this.obscureText,
+      this.validator,
+      this.inputFormatters,
+      this.onEditingComplete,
+      this.sufixIconColor})
+      : super(key: key);
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -87,10 +89,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.words,
         decoration: InputDecoration(
-          suffixIconColor: AppColors.orange,
+          suffixIconColor: widget.sufixIconColor,
           helperMaxLines: 3,
           helperText: _helperText,
-          errorStyle: TextStyle(color: AppColors.orange),
+          errorStyle: const TextStyle(color: AppColors.orange),
           suffixIcon: widget.sufixIcon,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: widget.hintText,
@@ -98,7 +100,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           labelStyle: AppTextStyle.inputText.copyWith(color: AppColors.grey),
           focusedBorder: defaultBorder.copyWith(
               borderSide: const BorderSide(color: AppColors.darkBlue)),
-          errorBorder: OutlineInputBorder(
+          errorBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.orange, width: 0.5)),
           focusedErrorBorder: defaultBorder,
           enabledBorder: defaultBorder.copyWith(),

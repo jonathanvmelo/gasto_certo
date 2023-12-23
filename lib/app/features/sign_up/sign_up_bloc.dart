@@ -24,11 +24,15 @@ class SignUpBloc {
   }
 
   _mapEventToState(SignUpEvent event) async {
-    User? user;
-    _outPutUser.add(SignUpLoadingState());
-    if (event is GetUser) {
-      user = await googleService.signInWithGoogle();
+    try {
+      User? user;
+      _outPutUser.sink.add(SignUpLoadingState());
+      if (event is GetUser) {
+        user = await googleService.signInWithGoogle();
+      }
+      _outPutUser.sink.add(SignUpSuccessState(user: user));
+    } catch (e) {
+      _outPutUser.sink.addError(SignUpErrorState(message: e.toString()));
     }
-    _outPutUser.add(SignUpSuccessState(user: user));
   }
 }

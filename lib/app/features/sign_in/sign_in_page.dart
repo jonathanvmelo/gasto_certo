@@ -83,6 +83,8 @@ class _SignInPageState extends State<SignInPage> {
     _passwordController.dispose();
     super.dispose();
   }
+ 
+  String logo = 'Gasto Certo';
 
   @override
   Widget build(BuildContext context) {
@@ -92,15 +94,27 @@ class _SignInPageState extends State<SignInPage> {
           FocusScope.of(context).unfocus();
         },
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(30, 60, 30, 60),
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
           child: ListView(
             children: [
               Column(
                 children: [
-                  Center(
-                    child: Image.asset('assets/images/logo.png',
-                        width: 222), // child: Text(
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 50),
+                  //   child: Center(
+                  //     child: Image.asset('assets/images/logo.png',
+                  //         width: 222), // child: Text(
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Center(
+                        child: Text(
+                      '${logo}',
+                      style: AppTextStyle.mediumText26,
+                    )), // child: Text(
                   ),
+
                   // Center(
                   //   child: Text(
                   //     "Faça seu login!",
@@ -131,7 +145,7 @@ class _SignInPageState extends State<SignInPage> {
                         controller: _passwordController,
                         labelText: 'senha',
                         hintText: '********',
-                        helperText: "A senha deve ter entre 6 e 12 caracteres",
+                        //helperText: "A senha deve ter entre 6 e 12 caracteres",
                         validator: Validator.validatePassword,
                         onEditingComplete: () {
                           login();
@@ -142,7 +156,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.fromLTRB(0, 40, 0, 30),
+                padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                 alignment: Alignment.bottomCenter,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,7 +180,7 @@ class _SignInPageState extends State<SignInPage> {
                     TextButton(
                       child: Text(
                         "Esqueci minha senha!",
-                        style: AppTextStyle.mediumText18
+                        style: AppTextStyle.smallText14
                             .copyWith(color: AppColors.greyDark),
                       ),
                       onPressed: () {
@@ -177,13 +191,13 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30, 0, 20),
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Divider(
-                        color: AppColors.grey.withOpacity(0.3),
+                        color: AppColors.grey.withOpacity(0.2),
                         height: 0.5,
                       ),
                     ),
@@ -192,28 +206,62 @@ class _SignInPageState extends State<SignInPage> {
                         child: const Text('ou')),
                     Expanded(
                       child: Divider(
-                        color: AppColors.grey.withOpacity(0.3),
+                        color: AppColors.grey.withOpacity(0.2),
                         height: 0.5,
                       ),
                     ),
                   ],
                 ),
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        child: Image.asset('assets/images/google_circle.png',
-                            width: 50, height: 50, fit: BoxFit.cover),
-                      )
-                    ],
-                  ),
-                ),
-              )
+              Ink(
+                decoration: BoxDecoration(
+                    color: AppColors.grey,
+                    border: Border.all(
+                      color: AppColors.transparent,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(8))),
+                child: InkWell(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            child: Image.asset(
+                                'assets/images/google_circle.png',
+                                width: 40,
+                                height: 40,
+                                fit: BoxFit.cover),
+                          ),
+                          const SizedBox(
+                            width: 35,
+                          ),
+                          Text(
+                            'Entrar com Google',
+                            style: AppTextStyle.mediumText18
+                                .apply(color: AppColors.white),
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+              // PrimaryButton(
+              //   textButton: 'Entrar com Google',
+              //   color: AppColors.googleBlue,
+              //   onTap: () {},
+              // )
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: Padding(
+              //     padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //
+              //       ],
+              //     ),
+              //   ),
+              // )
             ],
           ),
         ),

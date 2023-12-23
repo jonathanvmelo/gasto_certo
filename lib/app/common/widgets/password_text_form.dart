@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:gasto_certo/app/common/constants/app_colors.dart';
 
 import 'package:gasto_certo/app/common/widgets/custom_text_form_field.dart';
 
@@ -43,6 +44,7 @@ class _PasswordTextFormState extends State<PasswordTextForm> {
       labelText: widget.labelText,
       maxLength: widget.maxLength,
       obscureText: isHidden,
+      sufixIconColor: isHidden ? AppColors.greyDark : AppColors.orange,
       textCapitalization: TextCapitalization.none,
       onEditingComplete: widget.onEditingComplete ??
           () {

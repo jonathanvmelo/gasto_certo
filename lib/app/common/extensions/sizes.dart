@@ -20,6 +20,7 @@ class Sizes {
     Size designSize = _designSize,
   }) {
     final deviceData = MediaQuery.maybeOf(context);
+    // ignore: unused_local_variable
     final deviceSize = deviceData?.size ?? _designSize;
 
     _instance._height = designSize.height;
